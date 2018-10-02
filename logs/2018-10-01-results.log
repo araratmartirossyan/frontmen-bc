@@ -1,0 +1,4 @@
+{"level":"info","message":"Admin User Created. Email: niek.heezemans@frontmen.nl - Username: admin","timestamp":"1:02:35 AM"}
+{"level":"info","message":"Admin Role ID Created","timestamp":"1:02:36 AM"}
+{"level":"info","message":"Admin Branch ID Created","timestamp":"1:02:36 AM"}
+{"level":"warn","message":"Invalid Token on request: /users/myprofile","timestamp":"1:30:03 AM"}
