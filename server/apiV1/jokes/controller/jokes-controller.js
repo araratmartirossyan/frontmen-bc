@@ -61,10 +61,14 @@ module.exports = {
             jokeId: value[0].id || '',
             isFavorite: true
           };
-          console.log(incominData, 'important')
           new Favorites(incominData).save()
-            .then(resolve)
-            .catch(reject);
+            .then(data => {
+              Favorites.findAndCountAll()
+                .then(({ count }) =>
+                  resolve(({ count, data }))
+                ).catch(reject)
+            })
+            .catch(reject)
         })
         .catch(reject)
     });
