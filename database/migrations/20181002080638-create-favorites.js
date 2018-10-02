@@ -14,6 +14,9 @@ module.exports = {
       jokeId: {
         type: Sequelize.STRING
       },
+      isFavorite: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

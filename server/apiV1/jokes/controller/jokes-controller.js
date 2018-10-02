@@ -9,13 +9,20 @@ module.exports = {
   getJokes: () => {
     return new Promise((resolve, reject) => {
       axios.get('http://api.icndb.com/jokes/random/10')
-        .then(resolve)
+        .then(data => {
+          Favorites.find({
+            where: {
+              jokeId: '1'
+            }
+          })
+          resolve(data)
+        })
         .catch(reject)
     });
   },
   putFavorite: (joke, jokeId) => {
     return new Promise((resolve, reject) => {
-      const data = { joke, jokeId };
+      const data = { joke, jokeId, isFavorite: true };
       Favorites.find({
         where: {
           jokeId
@@ -40,16 +47,16 @@ module.exports = {
   getFavorite: (page = 1, limit = 10) => {
     return new Promise((resolve, reject) => {
       Favorites.findAndCountAll()
-      .then(({ count }) => {
-        const pages = Math.ceil(count / limit)
-        const offset = limit * (page - 1)
-        Favorites.findAll({
-          limit,
-          offset
-        }).then(favorites =>
-          resolve({ favorites, count, pages })
-        )
-      }).catch(reject)
+        .then(({ count }) => {
+          const pages = Math.ceil(count / limit)
+          const offset = limit * (page - 1)
+          Favorites.findAll({
+            limit,
+            offset
+          }).then(favorites =>
+            resolve({ favorites, count, pages })
+          )
+        }).catch(reject)
     });
   }
 }
