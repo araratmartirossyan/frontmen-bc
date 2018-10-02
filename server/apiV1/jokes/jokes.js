@@ -14,6 +14,7 @@ jokes.get('/random', (req, res) => {
 });
 jokes.options('/')
 jokes.post('/', (req, res, next) => {
+  console.log(req.body.joke, req.body.jokeId)
   controller.putFavorite(req.body.joke, req.body.jokeId)
     .then(() => {
       res.status(200).send({
@@ -26,10 +27,12 @@ jokes.post('/', (req, res, next) => {
       })
     })
 })
-jokes.get('/favorites', (req, res) => {
-  controller.getFavorite()
+jokes.options('/favorites')
+jokes.get('/favorites', (req, res, next) => {
+  const page = Number(req.query.page)
+  const limit =  Number(req.query.limit)
+  controller.getFavorite(page, limit)
     .then((data) => {
-      console.log(data, 'important')
       res.status( 200 ).send({ data });
     }, err => {
       res.status( 400 ).send(err);

@@ -37,11 +37,19 @@ module.exports = {
      
     });
   },
-  getFavorite: () => {
+  getFavorite: (page = 1, limit = 10) => {
     return new Promise((resolve, reject) => {
-      Favorites.findAll()
-        .then(resolve)
-        .catch(reject);
+      Favorites.findAndCountAll()
+      .then(({ count }) => {
+        const pages = Math.ceil(count / limit)
+        const offset = limit * (page - 1)
+        Favorites.findAll({
+          limit,
+          offset
+        }).then(favorites =>
+          resolve({ favorites, count, pages })
+        )
+      }).catch(reject)
     });
   }
 }
