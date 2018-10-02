@@ -6,17 +6,10 @@ const models = require('../../../../database/models');
 const Favorites = models.Favorites;
 
 module.exports = {
-  getJokes: () => {
+  getJokes: count => {
     return new Promise((resolve, reject) => {
-      axios.get('http://api.icndb.com/jokes/random/10')
-        .then(data => {
-          Favorites.find({
-            where: {
-              jokeId: '1'
-            }
-          })
-          resolve(data)
-        })
+      axios.get(`http://api.icndb.com/jokes/random/${count}`)
+        .then(resolve)
         .catch(reject)
     });
   },
@@ -57,6 +50,23 @@ module.exports = {
             resolve({ favorites, count, pages })
           )
         }).catch(reject)
+    });
+  },
+  generateFavorite: (count = 1) => {
+    return new Promise((resolve, reject) => {
+      axios.get(`http://api.icndb.com/jokes/random/1`)
+        .then(({ data: { value } }) => {
+          const incominData = {
+            joke: value[0].joke || '',
+            jokeId: value[0].id || '',
+            isFavorite: true
+          };
+          console.log(incominData, 'important')
+          new Favorites(incominData).save()
+            .then(resolve)
+            .catch(reject);
+        })
+        .catch(reject)
     });
   }
 }

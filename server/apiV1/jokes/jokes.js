@@ -1,11 +1,21 @@
 'use strict';
 
 const jokes = require('express').Router();
-// const logger = require('../../utils/logger');
+const logger = require('../../utils/logger');
 const controller = require('./controller/jokes-controller');
 
+jokes.get('/generateFavorite', (req, res) => {
+  const count = Number(req.query.count)
+  controller.generateFavorite(count)
+    .then(data => {
+      res.status( 200 ).send({ data });
+	  }, err => {
+      res.status( 400 ).send(err);
+    })
+});
 jokes.get('/random', (req, res) => {
-  controller.getJokes()
+  const count = Number(req.query.count)
+  controller.getJokes(count)
     .then(({ data: { value } }) => {
       res.status( 200 ).send({ value });
 	  }, err => {
@@ -14,7 +24,6 @@ jokes.get('/random', (req, res) => {
 });
 jokes.options('/')
 jokes.post('/', (req, res, next) => {
-  console.log(req.body.joke, req.body.jokeId)
   controller.putFavorite(req.body.joke, req.body.jokeId)
     .then(() => {
       res.status(200).send({
